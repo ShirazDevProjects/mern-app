@@ -6,7 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 EXPOSE 4000
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "preview"]
 
 # Production stage
 # FROM nginx:alpine
