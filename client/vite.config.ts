@@ -9,7 +9,7 @@ export default defineConfig({
         port: 4000,
         proxy: {
             '/api': {
-                target: 'http://localhost:4500',
+                target: 'https://server.srv1011002.hstgr.cloud',
                 changeOrigin: true,
             },
         },
