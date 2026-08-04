@@ -7,7 +7,7 @@ const { Pool } = require('pg');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4500;
 
 // Store MongoDB database connection error
 let dbError = null;

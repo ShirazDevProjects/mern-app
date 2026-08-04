@@ -2,6 +2,8 @@ version: '3.8'
 services:
   backend:
     build: ./server
+    environment:
+      - PORT=4500
     ports:
       - "4500:4500"
     networks:
