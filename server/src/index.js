@@ -20,7 +20,7 @@ let pgError = null;
 // Connect to MongoDB
 if (process.env.MONGODB_URI && process.env.MONGODB_URI.trim() !== '') {
     mongoose.connect(process.env.MONGODB_URI, {
-        family: 4, // Forces IPv4 (often fixes ENOTFOUND in Docker)
+        family: 4, // Forces IPv4 connection
   serverSelectionTimeoutMS: 5000
     })
         .then(() => {
