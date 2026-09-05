@@ -1,5 +1,4 @@
 services:
-  # Vite / React Frontend Service (Served via Nginx)
   client:
     build:
       context: ./client
