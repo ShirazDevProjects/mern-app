@@ -18,7 +18,7 @@ services:
       - "traefik.http.routers.client-https.rule=Host(`${DOMAIN:-localhost}`)"
       - "traefik.http.routers.client-https.entrypoints=websecure"
       - "traefik.http.routers.client-https.tls=true"
-      - "traefik.http.routers.client-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-myresolver}"
+      - "traefik.http.routers.client-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}"
       - "traefik.http.routers.client-https.priority=1"
       - "traefik.http.routers.client-https.service=client-service"
       # Internal Nginx container port
@@ -51,7 +51,7 @@ services:
       - "traefik.http.routers.server-https.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.server-https.entrypoints=websecure"
       - "traefik.http.routers.server-https.tls=true"
-      - "traefik.http.routers.server-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-myresolver}"
+      - "traefik.http.routers.server-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}"
       - "traefik.http.routers.server-https.priority=100"
       - "traefik.http.routers.server-https.service=server-service"
       # Internal backend container port
