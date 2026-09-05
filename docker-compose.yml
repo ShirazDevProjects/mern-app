@@ -72,7 +72,6 @@ services:
       - mern-internal
 
 networks:
-
   # Isolated private network for MERN internal communication
   mern-internal:
     driver: bridge
