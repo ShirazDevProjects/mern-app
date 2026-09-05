@@ -9,8 +9,6 @@ services:
       - server
     labels:
       - "traefik.enable=true"
-      # Tells existing Traefik which Docker network to use
-      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik-network}"
       # HTTP Router
       - "traefik.http.routers.client-http.rule=Host(`${DOMAIN:-localhost}`)"
       - "traefik.http.routers.client-http.entrypoints=web"
@@ -44,8 +42,6 @@ services:
       - mern-internal
     labels:
       - "traefik.enable=true"
-      # Tells existing Traefik which Docker network to use
-      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik-network}"
       # HTTP Router
       - "traefik.http.routers.server-http.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.server-http.entrypoints=web"
