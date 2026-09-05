@@ -1,0 +1,85 @@
+services:
+  # Vite / React Frontend Service (Served via Nginx)
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: mern-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    networks:
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      # Tells existing Traefik which Docker network to use
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik-network}"
+      # HTTP Router
+      - "traefik.http.routers.client-http.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.client-http.entrypoints=web"
+      - "traefik.http.routers.client-http.priority=1"
+      - "traefik.http.routers.client-http.service=client-service"
+      # HTTPS Router
+      - "traefik.http.routers.client-https.rule=Host(`${DOMAIN:-localhost}`)"
+      - "traefik.http.routers.client-https.entrypoints=websecure"
+      - "traefik.http.routers.client-https.tls=true"
+      - "traefik.http.routers.client-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-myresolver}"
+      - "traefik.http.routers.client-https.priority=1"
+      - "traefik.http.routers.client-https.service=client-service"
+      # Internal Nginx container port
+      - "traefik.http.services.client-service.loadbalancer.server.port=80"
+
+  # Express Backend API Service
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: mern-server
+    restart: unless-stopped
+    environment:
+      - PORT=4500
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI:-mongodb://mongo:27017/mernapp}
+      - POSTGRES_URI=${POSTGRES_URI:-}
+    depends_on:
+      - mongo
+    networks:
+      - mern-internal
+    labels:
+      - "traefik.enable=true"
+      # Tells existing Traefik which Docker network to use
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-traefik-network}"
+      # HTTP Router
+      - "traefik.http.routers.server-http.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.server-http.entrypoints=web"
+      - "traefik.http.routers.server-http.priority=100"
+      - "traefik.http.routers.server-http.service=server-service"
+      # HTTPS Router
+      - "traefik.http.routers.server-https.rule=Host(`${DOMAIN:-localhost}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.server-https.entrypoints=websecure"
+      - "traefik.http.routers.server-https.tls=true"
+      - "traefik.http.routers.server-https.tls.certresolver=${TRAEFIK_CERTRESOLVER:-myresolver}"
+      - "traefik.http.routers.server-https.priority=100"
+      - "traefik.http.routers.server-https.service=server-service"
+      # Internal backend container port
+      - "traefik.http.services.server-service.loadbalancer.server.port=4500"
+
+  # MongoDB Database Service (Isolated to internal network)
+  mongo:
+    image: mongo:7
+    container_name: mern-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mern-internal
+
+networks:
+
+  # Isolated private network for MERN internal communication
+  mern-internal:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

@@ -2,7 +2,7 @@ node_modules/
 dist/
 build/
 .agent
-.env
+# .env
 .DS_Store
 coverage/
 npm-debug.log*

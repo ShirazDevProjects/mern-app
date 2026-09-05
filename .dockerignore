@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+.git
+.gitignore
+.agent
+.env
+traefik-data/acme.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
